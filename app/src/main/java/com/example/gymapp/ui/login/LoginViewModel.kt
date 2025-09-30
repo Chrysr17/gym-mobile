@@ -11,11 +11,9 @@ import kotlinx.coroutines.launch
 class LoginViewModel : ViewModel() {
     var cliente = MutableLiveData<ClienteDTO?>()
     val error = MutableLiveData<String?>()
-
     fun login(nombreUsuario: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Llamada a la API directamente, sin awaitResponse()
                 val response = RetrofitClient.authService.login(nombreUsuario, password)
                 if (response.isSuccessful) {
                     cliente.postValue(response.body()) // devuelve ClienteDTO
