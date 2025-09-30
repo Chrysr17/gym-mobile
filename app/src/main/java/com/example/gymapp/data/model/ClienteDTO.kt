@@ -10,5 +10,6 @@ data class ClienteDTO(
     val sede: SedeDTO,
     val fechaPago: String?,
     val mensualidad: Double?,
-    val descripcion: String?
+    val descripcion: String?,
+    val usuario: UsuarioDTO?
 )

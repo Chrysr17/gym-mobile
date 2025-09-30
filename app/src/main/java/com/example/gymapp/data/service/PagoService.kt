@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface PagoService {
-    @GET("pago/cliente/{id}")
+    @GET("/api/pagos/cliente/{id}")
     fun listarPorCliente(@Path("id") id: Int): Call<List<PagoDTO>>
 }
