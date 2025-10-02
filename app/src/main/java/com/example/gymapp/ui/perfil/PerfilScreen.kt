@@ -1,31 +1,48 @@
 package com.example.gymapp.ui.perfil
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gymapp.ui.colors.BlackPrimary
 import com.example.gymapp.ui.colors.GrayBackground
 import com.example.gymapp.ui.colors.YellowPrimary
-
 
 @Composable
 fun PerfilScreen(clienteId: Int) {
@@ -37,10 +54,12 @@ fun PerfilScreen(clienteId: Int) {
         viewModel.cargarCliente(clienteId)
     }
 
+    // Hacer scroll en caso de que la información sea larga
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(GrayBackground)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Text(
@@ -57,7 +76,7 @@ fun PerfilScreen(clienteId: Int) {
         }
 
         cliente?.let { c ->
-            // Tarjeta de resumen
+            // Card de resumen con avatar
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,36 +85,72 @@ fun PerfilScreen(clienteId: Int) {
                 shape = RoundedCornerShape(24.dp),
                 elevation = CardDefaults.cardElevation(8.dp)
             ) {
-                Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Usuario",
-                        tint = BlackPrimary,
-                        modifier = Modifier.size(64.dp)
-                    )
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Avatar circular
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                            .background(BlackPrimary.copy(alpha = 0.2f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Usuario",
+                            tint = BlackPrimary,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+
                     Spacer(Modifier.height(12.dp))
-                    Text(c.nombre, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold), color = BlackPrimary)
+                    Text(
+                        c.nombre,
+                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                        color = BlackPrimary
+                    )
                     Text("DNI: ${c.dni}", style = MaterialTheme.typography.bodyMedium, color = BlackPrimary)
                 }
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // Información de contacto
+            // Sección Contacto
             InfoSection(title = "Contacto") {
-                InfoRowWithIcon(icon = Icons.Default.Phone, label = "Teléfono", value = c.telefono ?: "No registrado")
-                InfoRowWithIcon(icon = Icons.Default.Email, label = "Correo", value = c.correo ?: "No registrado")
-                InfoRowWithIcon(icon = Icons.Default.LocationOn, label = "Dirección", value = c.direccion ?: "No registrada")
+                InfoRowWithIcon(Icons.Default.Phone, "Teléfono", c.telefono ?: "No registrado")
+                InfoRowWithIcon(Icons.Default.Email, "Correo", c.correo ?: "No registrado")
+                InfoRowWithIcon(Icons.Default.Home, "Dirección", c.direccion ?: "No registrada")
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // Información adicional
+            // Sección Detalles de membresía
             InfoSection(title = "Detalles de Membresía") {
-                InfoRowWithIcon(icon = Icons.Default.LocationOn, label = "Sede", value = c.sede?.nombre ?: "No asignada")
-                InfoRowWithIcon(icon = Icons.Default.DateRange, label = "Fecha de pago", value = c.fechaPago ?: "No registrado")
-                InfoRowWithIcon(icon = Icons.Default.Check, label = "Mensualidad", value = c.mensualidad?.toString() ?: "0.0")
-                InfoRowWithIcon(icon = Icons.Default.Info, label = "Descripción", value = c.descripcion ?: "N/A")
+                InfoRowWithIcon(Icons.Default.LocationCity, "Sede", c.sede?.nombre ?: "No asignada")
+                InfoRowWithIcon(Icons.Default.DateRange, "Fecha de pago", c.fechaPago ?: "No registrado")
+                InfoRowWithIcon(Icons.Default.Money, "Mensualidad", c.mensualidad?.toString() ?: "0.0")
+
+                // Descripción con wrapping y fondo ligero
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Descripción",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    color = BlackPrimary
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(BlackPrimary.copy(alpha = 0.05f), shape = RoundedCornerShape(12.dp))
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = c.descripcion ?: "No hay descripción",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = BlackPrimary
+                    )
+                }
             }
         }
     }

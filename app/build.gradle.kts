@@ -46,6 +46,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
     implementation("androidx.activity:activity-compose:1.11.0")
 
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
+
+
     // Compose BOM controla todas las versiones de Compose
     implementation(platform("androidx.compose:compose-bom:2025.09.00"))
     implementation("androidx.compose.material3:material3")
