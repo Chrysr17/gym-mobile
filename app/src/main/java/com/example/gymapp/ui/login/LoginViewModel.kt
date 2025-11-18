@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.gymapp.data.api.RetrofitClient
 import com.example.gymapp.data.model.ClienteDTO
 import androidx.lifecycle.viewModelScope
+import com.example.gymapp.data.model.LoginRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -14,7 +15,11 @@ class LoginViewModel : ViewModel() {
     fun login(nombreUsuario: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.authService.login(nombreUsuario, password)
+                val loginRequest = LoginRequest(
+                    nombreUsuario = nombreUsuario,
+                    password = password
+                )
+                val response = RetrofitClient.authService.login(loginRequest)
                 if (response.isSuccessful) {
                     cliente.postValue(response.body()) // devuelve ClienteDTO
                 } else {
