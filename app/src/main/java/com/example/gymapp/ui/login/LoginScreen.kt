@@ -49,10 +49,12 @@ fun LoginScreen(onLoginSuccess: (ClienteDTO) -> Unit) {
     var password by remember { mutableStateOf("") }
 
     var showSuccessDialog by remember { mutableStateOf(false) }
+    var loginHandled by remember { mutableStateOf(false) }
 
     // Cuando login devuelva cliente → mostrar modal
     LaunchedEffect(cliente) {
-        if (cliente != null) {
+        if (cliente != null && !loginHandled) {
+            loginHandled = true
             showSuccessDialog = true
         }
     }

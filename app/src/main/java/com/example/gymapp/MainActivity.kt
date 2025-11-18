@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
                         BottomNav(currentScreen) { newScreen ->
                             if (newScreen == "login") {
                                 cliente = null
+                                viewModelStore.clear()
                                 currentScreen = "login"
                             } else {
                                 currentScreen = newScreen
