@@ -5,12 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -22,7 +26,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.gymapp.data.model.ClienteDTO
+import com.example.gymapp.ui.colors.BlackPrimary
+import com.example.gymapp.ui.colors.GrayBackground
+import com.example.gymapp.ui.colors.YellowPrimary
 import com.example.gymapp.ui.login.LoginScreen
 import com.example.gymapp.ui.pagos.PagosScreen
 import com.example.gymapp.ui.perfil.PerfilScreen
@@ -82,4 +90,29 @@ fun BottomNav(currentScreen: String, onNavigate: (String) -> Unit) {
             label = { Text("Salir") }
         )
     }
+}
+@Composable
+fun LoginSuccessDialog(onDismiss: () -> Unit, nombre: String) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = YellowPrimary)
+            ) {
+                Text("Continuar", color = BlackPrimary)
+            }
+        },
+        title = {
+            Text("¡Bienvenido!", color = BlackPrimary)
+        },
+        text = {
+            Text(
+                "Inicio de sesión exitoso.\nHola $nombre 👋",
+                color = BlackPrimary
+            )
+        },
+        containerColor = GrayBackground,
+        shape = RoundedCornerShape(16.dp)
+    )
 }
