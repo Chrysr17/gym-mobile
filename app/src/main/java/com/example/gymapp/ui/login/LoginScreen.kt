@@ -115,7 +115,6 @@ fun LoginScreen(onLoginSuccess: (ClienteDTO) -> Unit) {
                     Text(it, color = MaterialTheme.colorScheme.error)
                 }
 
-                cliente?.let { onLoginSuccess(it) }
             }
         }
     }
@@ -129,3 +128,4 @@ fun LoginScreen(onLoginSuccess: (ClienteDTO) -> Unit) {
         )
     }
 }
+
