@@ -47,8 +47,12 @@ class MainActivity : ComponentActivity() {
                 bottomBar = {
                     if (currentScreen != "login") {
                         BottomNav(currentScreen) { newScreen ->
-                            if (newScreen == "login") cliente = null
-                            currentScreen = newScreen
+                            if (newScreen == "login") {
+                                cliente = null
+                                currentScreen = "login"
+                            } else {
+                                currentScreen = newScreen
+                            }
                         }
                     }
                 }
