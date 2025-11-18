@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gymapp.LoginSuccessDialog
 import com.example.gymapp.data.model.ClienteDTO
 import com.example.gymapp.ui.colors.AppTypography
 import com.example.gymapp.ui.colors.BlackPrimary
@@ -45,6 +47,15 @@ fun LoginScreen(onLoginSuccess: (ClienteDTO) -> Unit) {
 
     var usuario by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+    // Cuando login devuelva cliente → mostrar modal
+    LaunchedEffect(cliente) {
+        if (cliente != null) {
+            showSuccessDialog = true
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -107,5 +118,14 @@ fun LoginScreen(onLoginSuccess: (ClienteDTO) -> Unit) {
                 cliente?.let { onLoginSuccess(it) }
             }
         }
+    }
+    if (showSuccessDialog && cliente != null) {
+        LoginSuccessDialog(
+            nombre = cliente!!.nombre,
+            onDismiss = {
+                showSuccessDialog = false
+                onLoginSuccess(cliente!!)
+            }
+        )
     }
 }
